@@ -1,19 +1,36 @@
 /* eslint-disable @next/next/no-img-element */
 
-export default function Featured() {
+import Image from "next/image";
+import Link from "next/link";
+
+export default function Featured({product}) {
     return (
         <div className="px-[8%] bg-gray-600 grid grid-cols-2 gap-10">
             <div>
                 <h1 className="text-2xl text-white pt-[10%]">The best stock photos.</h1>
                 <p className="text-sm text-gray-200 py-4 pb-4">
-                    Amet veniam ea ut cillum ex nostrud anim quis velit. Eiusmod ipsum consequat nostrud eiusmod irure id adipisicing consectetur commodo ipsum fugiat. Et voluptate nulla exercitation eu.
-                    Ipsum nostrud nostrud enim minim ad labore sunt consequat ipsum mollit esse consectetur non. Enim et laborum sit ullamco amet. Labore esse cupidatat reprehenderit qui.
+                    {product.description}
                 </p>
-                <button className="btn-primary mr-1">Read more</button>
-                <button className="btn-secondary ml-1">Add to cart</button>
+                <div className="flex gap-1">
+                    <Link href={'/products/' + product._id}>
+                    <button 
+                    className="btn-primary"> 
+                        Read more
+                    </button>    
+                    </Link>
+                    <button className="btn-secondary inline-flex gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                    </svg>
+                        Add to cart</button>
+                </div>
             </div>
             <div className="max-w-full py-[10%]">
-                <img src="https://images.pexels.com/photos/6930919/pexels-photo-6930919.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="hill image"/>
+                <Image 
+                width={400}
+                height={400}
+                src="https://images.pexels.com/photos/6930919/pexels-photo-6930919.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                alt="hill image"/>
             </div>
         </div>
     );
