@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .btn-secondary {
-    @apply bg-orange-500 font-medium rounded-md border-none text-white py-1 px-4
+    @apply bg-cyan-600 font-medium rounded-md border-none text-white py-1 px-4
 }
 .btn-primary {
     @apply bg-white font-medium rounded-md border-none text-gray-800 py-1 px-4
