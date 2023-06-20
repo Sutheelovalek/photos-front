@@ -1,8 +1,10 @@
 import Image from "next/image";
-import CartIcon from "./icons/CartIcon";
 import Link from "next/link";
+import { useContext } from "react";
+import { CartContext } from "./CartContext";
 
 export default function ProductBox({product, _id}) {
+    const {addProduct} = useContext(CartContext);
     const url = 'products/'+_id; 
     return (
         <div className="flex flex-col w-full">
@@ -18,8 +20,12 @@ export default function ProductBox({product, _id}) {
                 <h2 className="m-0">{product.title}</h2>
             </Link>
             <div className="flex justify-between ">
-                <h2 className="font-semibold text-lg">${product.price}</h2>
-                <button className="flex text-cyan-600 border border-cyan-600 px-2 rounded-md">Add to cart</button>
+                <h2 className="font-semibold text-lg">
+                    ${product.price}
+                </h2>
+                <button 
+                    onClick={() => addProduct(_id)}
+                    className="flex text-cyan-600 border border-cyan-600 px-2 rounded-md">Add to cart</button>
             </div>
         </div>
     )
