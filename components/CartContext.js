@@ -19,11 +19,31 @@ export function CartContextProvider({children}){
             setCartProducts(JSON.parse(ls.getItem('cart')));
         }
     }, []);
+
     function addProduct(productId) {
         setCartProducts(prev => [...prev, productId]);
     }
+
+    function removeProduct(productId) {
+        setCartProducts(prev => {
+           const positionId =   prev.indexOf(productId);
+           if (positionId !== -1) {
+            return prev.filter((value, index) => index !== positionId);
+           }
+           return prev;
+        });
+    }
+    function clearCart() {
+        setCartProducts([])
+      }
     return (
-        <CartContext.Provider value={{cartProducts, setCartProducts, addProduct}}>
+        <CartContext.Provider value={{
+            cartProducts, 
+            setCartProducts, 
+            addProduct,
+            removeProduct,
+            clearCart
+        }}>
             {children}
         </CartContext.Provider>
     );

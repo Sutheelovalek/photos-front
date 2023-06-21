@@ -8,3 +8,6 @@
 .btn-primary {
     @apply bg-white font-medium rounded-md border-none text-gray-800 py-1 px-4
 }
+.box {
+    @apply bg-gray-300 p-10 rounded-lg
+}

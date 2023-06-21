@@ -21,7 +21,7 @@ export default function ProductBox({product, _id}) {
             </Link>
             <div className="flex justify-between ">
                 <h2 className="font-semibold text-lg">
-                    ${product.price}
+                    ฿{product.price}
                 </h2>
                 <button 
                     onClick={() => addProduct(_id)}
