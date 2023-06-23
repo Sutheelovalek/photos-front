@@ -9,6 +9,9 @@ export default function HomePage({featuredProduct, newProducts}) {
     <div>
      <Header />
      <Featured product={featuredProduct}/>
+      <h1 className="text-3xl px-[10%] mt-10 font-bold text-gray-800">
+          High-Quality Stock Images
+      </h1>
      <NewProducts products={newProducts}/>
     </div>
   )

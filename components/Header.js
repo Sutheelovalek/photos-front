@@ -21,7 +21,7 @@ export default function Header() {
             </Link>
             <nav className="flex gap-4">
                 <Link href={'/'}>Home</Link>
-                <Link href={'/products'}>All products</Link>
+                <Link href={'/products'}>All photos</Link>
                 <Link href={'/categories'}>Categories</Link>
                 <Link href={'/account'}>Account</Link>
                 <Link href={'/cart'}>Cart ({cartProducts.length})</Link>

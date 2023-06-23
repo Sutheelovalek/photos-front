@@ -11,3 +11,9 @@
 .box {
     @apply bg-gray-300 p-10 rounded-lg
 }
+.title {
+    @apply font-bold text-4xl mt-8;
+}
+.productsGrid {
+    @apply grid-cols-4 gap-5 
+}
