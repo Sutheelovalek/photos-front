@@ -34,17 +34,11 @@ export function CartContextProvider({children}){
         });
     }
     function clearCart() {
-        setCartProducts([])
+        setCartProducts([]);
       }
-    return (
-        <CartContext.Provider value={{
-            cartProducts, 
-            setCartProducts, 
-            addProduct,
-            removeProduct,
-            clearCart
-        }}>
-            {children}
+      return (
+        <CartContext.Provider value={{cartProducts,setCartProducts,addProduct,removeProduct,clearCart}}>
+          {children}
         </CartContext.Provider>
-    );
-}
+      );
+    }

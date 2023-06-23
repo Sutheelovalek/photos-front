@@ -16,23 +16,26 @@ export default function CartPage() {
   const [country, setCountry] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
-  useEffect(() => {
-    if (window.location.href.includes("success")) {
-      setIsSuccess(true);
-      clearCart();
-    }
-  }, [clearCart]);
-
-  useEffect(() => {
+useEffect(() => {
     if (cartProducts.length > 0) {
-      axios.post("/api/cart", { ids: cartProducts })
-      .then((response) => {
-        setProducts(response.data);
-      });
+      axios.post('/api/cart', {ids:cartProducts})
+        .then(response => {
+          setProducts(response.data);
+        })
     } else {
       setProducts([]);
     }
   }, [cartProducts]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (window?.location.href.includes('success')) {
+      clearCart();
+      setIsSuccess(true);
+    }
+  }, [clearCart]);
 
   function moreOfThisProduct(id) {
     addProduct(id);
