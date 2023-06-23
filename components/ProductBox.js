@@ -7,7 +7,7 @@ export default function ProductBox({product, _id}) {
     const {addProduct} = useContext(CartContext);
     const url = 'products/'+_id; 
     return (
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full shadow-lg p-2 rounded-lg">
             <Link
             href={url}
             >
