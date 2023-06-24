@@ -5,15 +5,13 @@ import { Product } from "@/models/Product";
 import Image from "next/image";
 import { useContext } from "react";
 
-
-
 export default function ProductPage({product}) {
     const {addProduct} = useContext(CartContext)
     return (
         <>
         <Header />
         <div className="flex justify-evenly items-center mt-20 px-[10%] gap-10">
-            <div className="max-w-full border p-1 bg-gray-100 rounded-sm shadow-lg w-1/3">
+            <div className="max-w-full border p-1 bg-gray-100 rounded-sm shadow-lg w-1/2">
                 <Image 
                     src={product.images?.[0]}
                     width={1000}
@@ -21,7 +19,7 @@ export default function ProductPage({product}) {
                     alt="product image"
                 />
             </div>
-            <div className="flex flex-col gap-2 w-2/3">
+            <div className="flex flex-col gap-2 w-1/2">
                 <h1 className="font-bold text-3xl text-gray-900">{product.title}</h1>
                 <p className="text-xl mb-4">{product.description}</p>
                 <div className="flex gap-4">
@@ -34,10 +32,8 @@ export default function ProductPage({product}) {
                         </svg>
                         Add to cart
                     </button>
-
                 </div>
             </div>
-
         </div>
         </>
     )
