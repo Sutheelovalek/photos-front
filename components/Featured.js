@@ -13,7 +13,7 @@ export default function Featured({product}) {
     return (
         <div className="px-[8%] bg-gray-600 grid grid-cols-2 gap-10">
             <div>
-                <h1 className="text-2xl text-white pt-[10%]">The best stock photos.</h1>
+                <h1 className="text-2xl text-white pt-[10%]">{product.title}</h1>
                 <p className="text-sm text-gray-200 py-4 pb-4">
                     {product.description}
                 </p>

@@ -9,11 +9,21 @@
     @apply bg-white font-medium rounded-md border-none text-gray-800 py-1 px-4
 }
 .box {
-    @apply bg-gray-300 p-10 rounded-lg
+    @apply bg-gray-300 p-10 rounded-lg;
 }
 .title {
     @apply font-bold text-4xl mt-8 text-gray-800;
 }
 .productsGrid {
-    @apply grid-cols-4 gap-5 
+    @apply grid-cols-4 gap-5;
+}
+.center{
+    @apply max-w-3xl my-0 mx-auto py-0 px-[20px];
+}
+.col-wrapper{
+    @apply grid grid-cols-2 gap-5 my-10;
+}
+
+h2{
+    @apply font-bold text-3xl text-gray-800;
 }
