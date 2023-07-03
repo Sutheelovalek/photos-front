@@ -27,3 +27,13 @@
 h2{
     @apply font-bold text-3xl text-gray-800;
 }
+
+.btn-wishlist{
+   @apply border-0 w-5 h-5 absolute -top-6 -right-6 cursor-pointer;
+}
+.box-image{
+    @apply relative bg-transparent
+}
+.category-grid{
+    @apply flex flex-col justify-center items-center md:grid md:grid-cols-3 md:w-full gap-10;
+}

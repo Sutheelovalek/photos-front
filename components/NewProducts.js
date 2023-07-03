@@ -1,7 +1,8 @@
 
 import ProductBox from "./ProductBox";
 
-export default function NewProducts ({products}) {
+export default function NewProducts ({products , wishedProducts=[]}) {
+
     return (
         <div className="flex flex-col">
             <div className="grid grid-cols-3 gap-4 px-[10%] pt-6">
@@ -10,6 +11,7 @@ export default function NewProducts ({products}) {
                         product={product}
                         _id={product._id}
                         key={_id}
+                        wished={wishedProducts.includes(product._id)}
                     />
                 ))}
             </div>

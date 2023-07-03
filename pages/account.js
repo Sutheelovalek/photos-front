@@ -53,7 +53,6 @@ export default function AccountPage() {
               <h2 className="">Wishlist</h2>
             </div>
           </RevealWrapper>
-
           <RevealWrapper delay={100}>
             <div className="box flex flex-col gap-2 ml-[5%]">
                 <h2 className="">Account details</h2>
