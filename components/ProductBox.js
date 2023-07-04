@@ -7,8 +7,16 @@ import HeartOutlineIcon from "./icons/HeartOutlineIcon";
 import HeartSolidIcon from "./icons/HeartSolidIcon";
 import axios from "axios";
 
-export default function ProductBox({ product, _id, title, description, price, images, 
-    wished=false }) {
+export default function ProductBox({
+  product,
+  _id,
+  title,
+  description,
+  price,
+  images,
+  wished=false,
+  onRemoveFromWishlist = () => {},
+}) {
   const { addProduct } = useContext(CartContext);
   const url = "products/" + _id;
   const [isWished, setIsWished] = useState(wished);
@@ -17,9 +25,14 @@ export default function ProductBox({ product, _id, title, description, price, im
     ev.preventDefault();
     ev.stopPropagation();
     const nextValue = !isWished;
-    axios.post('/api/wishlist', {
+    if (nextValue === false && onRemoveFromWishlist) {
+      onRemoveFromWishlist(_id);
+    }
+    axios
+      .post("/api/wishlist", {
         product: _id,
-    }).then(() => {});
+      })
+      .then(() => {});
     setIsWished(nextValue);
   }
 
@@ -31,9 +44,11 @@ export default function ProductBox({ product, _id, title, description, price, im
             <button
               wished={isWished}
               onClick={addToWishlist}
-              className={`btn-wishlist ${isWished ? "text-red-500" : "text-gray-300"}`}
+              className={`btn-wishlist ${
+                isWished ? "text-red-500" : "text-gray-300"
+              }`}
             >
-              {isWished ? <HeartSolidIcon /> : <HeartOutlineIcon /> }
+              {isWished ? <HeartSolidIcon /> : <HeartOutlineIcon />}
             </button>
 
             <Image

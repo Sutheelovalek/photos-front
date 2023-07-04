@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Input from "@/components/Input";
+import ProductBox from "@/components/ProductBox";
 import axios from "axios";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { RevealWrapper } from "next-reveal";
@@ -13,7 +14,9 @@ export default function AccountPage() {
   const [postalCode, setPostalCode] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
   const [country, setCountry] = useState("");
-  const [loaded, setLoaded] = useState(false);
+  const [addressLoaded, setAddressLoaded] = useState(true);
+  const [wishListLoaded, setWishListLoaded] = useState(true);
+  const [wishedProducts, setWishedProducts] = useState([]);
 
   async function logout() {
     await signOut({
@@ -26,22 +29,35 @@ export default function AccountPage() {
     });
   }
   function saveAddress() {
-    const data = {name, email, city, streetAddress, postalCode, country};
-    axios.put('/api/address', data);
-
+    const data = { name, email, city, streetAddress, postalCode, country };
+    axios.put("/api/address", data);
   }
   useEffect(() => {
-        axios.get('/api/address').then(response => {
-            setName(response.data.name);
-            setEmail(response.data.email);
-            setCity(response.data.city);
-            setPostalCode(response.data.postalCode);
-            setStreetAddress(response.data.streetAddress);
-            setCountry(response.data.country);
-            setLoaded(true);
-        });
-  }, [])
+    if(!session){
+      return ;
+    }
+    setAddressLoaded(false);
+    setWishListLoaded(false);
+    axios.get("/api/address").then((response) => {
+      setName(response.data.name);
+      setEmail(response.data.email);
+      setCity(response.data.city);
+      setPostalCode(response.data.postalCode);
+      setStreetAddress(response.data.streetAddress);
+      setCountry(response.data.country);
+      setAddressLoaded(true);
+    });
+    axios.get("/api/wishlist").then((response) => {
+      setWishedProducts(response.data.map((wp) => wp.product));
+      setWishListLoaded(true);
+    });
+  }, [session]);
 
+  function productRemovedFromWishlist(idToRemove){
+    setWishedProducts(products => {
+      return [...products.filter(p => p._id.toString() !== idToRemove)];
+    });
+  }
 
   return (
     <>
@@ -49,66 +65,90 @@ export default function AccountPage() {
       <div className="center">
         <div className="col-wrapper">
           <RevealWrapper delay={0}>
-            <div className="box">
-              <h2 className="">Wishlist</h2>
+            <div className="bg-gray-100 p-10 rounded-lg">
+              <h2>Wishlist</h2>
+              {wishListLoaded && (
+              <div className="grid gap-10">
+                {wishedProducts.length > 0 &&
+                  wishedProducts.map((wp) => (
+                    <ProductBox
+                      onRemoveFromWishlist={productRemovedFromWishlist}
+                      product={wp}
+                      key={wp._id}
+                      wished={true}
+                      {...wp}
+                    />
+                  ))}
+                  {wishedProducts.length === 0 && (
+                    <>
+                     {session && (
+                      <p className="py-4">Your wishlist is empty</p>
+                     )} 
+                     {!session && (
+                      <p className="py-4">Login to add product to your wishlist </p>
+                     )}
+                    </>
+                  )}
+              </div>
+              )}
             </div>
           </RevealWrapper>
           <RevealWrapper delay={100}>
-            <div className="box flex flex-col gap-2 ml-[5%]">
-                <h2 className="">Account details</h2>
-                {loaded && (
-                    <>
+            <div className="bg-gray-100 p-10 rounded-lg flex flex-col gap-2 ml-[5%]">
+              <h2 className="pb-2">{session ? 'Account details' : 'Login'}</h2>
+              {addressLoaded && session && (
+                <>
+                  <Input
+                    value={name}
+                    onChange={(ev) => setName(ev.target.value)}
+                    type="text"
+                    placeholder="Name"
+                    name="name"
+                  />
+                  <Input
+                    value={email}
+                    onChange={(ev) => setEmail(ev.target.value)}
+                    type="text"
+                    placeholder="Email"
+                    name="email"
+                  />
+                  <span className="flex gap-1">
                     <Input
-                value={name}
-                onChange={(ev) => setName(ev.target.value)}
-                type="text"
-                placeholder="Name"
-                name="name"
-              />
-              <Input
-                value={email}
-                onChange={(ev) => setEmail(ev.target.value)}
-                type="text"
-                placeholder="Email"
-                name="email"
-              />
-              <span className="flex gap-1">
-                <Input
-                  value={city}
-                  onChange={(ev) => setCity(ev.target.value)}
-                  type="text"
-                  placeholder="City"
-                  name="city"
-                />
-                <Input
-                  value={postalCode}
-                  onChange={(ev) => setPostalCode(ev.target.value)}
-                  type="text"
-                  placeholder="Postal Code"
-                  name="postalCode"
-                />
-              </span>
-              <Input
-                value={streetAddress}
-                onChange={(ev) => setStreetAddress(ev.target.value)}
-                type="text"
-                placeholder="Street Address"
-                name="streetAddress"
-              />
-              <Input
-                value={country}
-                onChange={(ev) => setCountry(ev.target.value)}
-                type="text"
-                placeholder="Country"
-                name="country"
-              />
+                      value={city}
+                      onChange={(ev) => setCity(ev.target.value)}
+                      type="text"
+                      placeholder="City"
+                      name="city"
+                    />
+                    <Input
+                      value={postalCode}
+                      onChange={(ev) => setPostalCode(ev.target.value)}
+                      type="text"
+                      placeholder="Postal Code"
+                      name="postalCode"
+                    />
+                  </span>
+                  <Input
+                    value={streetAddress}
+                    onChange={(ev) => setStreetAddress(ev.target.value)}
+                    type="text"
+                    placeholder="Street Address"
+                    name="streetAddress"
+                  />
+                  <Input
+                    value={country}
+                    onChange={(ev) => setCountry(ev.target.value)}
+                    type="text"
+                    placeholder="Country"
+                    name="country"
+                  />
 
-              <button onClick={saveAddress} className="btn-secondary mt-4">
-                Save
-              </button>
-                    </>
-                )}
-              
+                  <button onClick={saveAddress} className="btn-secondary mt-4">
+                    Save
+                  </button>
+                </>
+              )}
+
               <hr className="border border-gray-200" />
               {session && (
                 <button onClick={logout} className="btn-primary">
@@ -117,7 +157,7 @@ export default function AccountPage() {
               )}
               {!session && (
                 <button onClick={login} className="btn-secondary">
-                  Login
+                  Login with Google
                 </button>
               )}
             </div>

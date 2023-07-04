@@ -2,6 +2,7 @@ import { CartContext } from "@/components/CartContext";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import { RevealWrapper } from "next-reveal";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
@@ -10,6 +11,7 @@ export default function CartPage() {
   const { cartProducts, addProduct, removeProduct, clearCart } =
     useContext(CartContext);
   const [products, setProducts] = useState([]);
+  const {data: session} = useSession();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [city, setCity] = useState("");
@@ -36,6 +38,12 @@ export default function CartPage() {
       clearCart();
       setIsSuccess(true);
     }
+  }, [clearCart]);
+
+  useEffect(() => {
+    if(!session){
+      return;
+    }
     axios.get('/api/address').then(response => {
       setName(response.data.name);
       setEmail(response.data.email);
@@ -44,7 +52,7 @@ export default function CartPage() {
       setStreetAddress(response.data.streetAddress);
       setCountry(response.data.country);
     });
-  }, [clearCart]);
+  },[session])
 
   function moreOfThisProduct(id) {
     addProduct(id);

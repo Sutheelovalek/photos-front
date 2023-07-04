@@ -3,8 +3,17 @@ import ProductBox from "@/components/ProductBox";
 import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]";
+import { WishedProduct } from "@/models/WishedProduct";
 
-export default function CategoriesPage({ mainCategories, categoriesProducts }) {
+import { mongooseConnect } from "@/lib/mongoose";
+
+export default function CategoriesPage({
+  mainCategories,
+  categoriesProducts,
+  wishedProducts = [],
+}) {
   return (
     <div>
       <Header />
@@ -25,6 +34,7 @@ export default function CategoriesPage({ mainCategories, categoriesProducts }) {
               {categoriesProducts[cat._id].map((product, _id) => (
                 <div key={product._id}>
                   <ProductBox
+                    wished={wishedProducts.includes(product._id)}
                     product={product}
                     _id={product._id}
                     key={_id}
@@ -46,10 +56,12 @@ export default function CategoriesPage({ mainCategories, categoriesProducts }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(conText) {
+  await mongooseConnect();
   const categories = await Category.find();
   const mainCategories = categories.filter((c) => !c.parent);
   const categoriesProducts = {}; // catId => [products]
+  const allFetchedProductsId = [];
   for (const mainCat of mainCategories) {
     const mainCatId = mainCat._id.toString();
     const childCatIds = categories
@@ -61,12 +73,23 @@ export async function getServerSideProps() {
       null,
       { limit: 3, sort: { _id: -1 } }
     );
+    allFetchedProductsId.push(...products.map((p) => p._id.toString()));
     categoriesProducts[mainCat._id] = products;
   }
+
+  const session = await getServerSession(conText.req, conText.res, authOptions);
+  const wishedProducts = session?.user
+    ? await WishedProduct.find({
+        userEmail: session?.user.email,
+        product: allFetchedProductsId,
+      })
+    : [];
+
   return {
     props: {
       mainCategories: JSON.parse(JSON.stringify(mainCategories)),
       categoriesProducts: JSON.parse(JSON.stringify(categoriesProducts)),
+      wishedProducts: wishedProducts.map((item) => item.product.toString()),
     },
   };
 }
