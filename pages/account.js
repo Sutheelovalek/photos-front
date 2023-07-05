@@ -1,10 +1,13 @@
 import Header from "@/components/Header";
 import Input from "@/components/Input";
 import ProductBox from "@/components/ProductBox";
+import Spinner from "@/components/Spinner";
+import Tabs from "@/components/Tabs";
 import axios from "axios";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { RevealWrapper } from "next-reveal";
 import { useEffect, useState } from "react";
+import SingleOrder from "@/components/SingleOrder";
 
 export default function AccountPage() {
   const { data: session } = useSession();
@@ -16,7 +19,10 @@ export default function AccountPage() {
   const [country, setCountry] = useState("");
   const [addressLoaded, setAddressLoaded] = useState(true);
   const [wishListLoaded, setWishListLoaded] = useState(true);
+  const [ordersLoaded, setOrdersLoaded] = useState(true);
   const [wishedProducts, setWishedProducts] = useState([]);
+  const [activeTab, setActiveTab] = useState("Orders");
+  const [orders, setOrders] = useState([]);
 
   async function logout() {
     await signOut({
@@ -33,11 +39,12 @@ export default function AccountPage() {
     axios.put("/api/address", data);
   }
   useEffect(() => {
-    if(!session){
-      return ;
+    if (!session) {
+      return;
     }
     setAddressLoaded(false);
     setWishListLoaded(false);
+    setOrdersLoaded(false);
     axios.get("/api/address").then((response) => {
       setName(response.data.name);
       setEmail(response.data.email);
@@ -51,13 +58,18 @@ export default function AccountPage() {
       setWishedProducts(response.data.map((wp) => wp.product));
       setWishListLoaded(true);
     });
+    axios.get("/api/orders").then((response) => {
+      setOrders(response.data);
+      setOrdersLoaded(true);
+    });
   }, [session]);
 
-  function productRemovedFromWishlist(idToRemove){
-    setWishedProducts(products => {
-      return [...products.filter(p => p._id.toString() !== idToRemove)];
+  function productRemovedFromWishlist(idToRemove) {
+    setWishedProducts((products) => {
+      return [...products.filter((p) => p._id.toString() !== idToRemove)];
     });
   }
+  
 
   return (
     <>
@@ -66,36 +78,59 @@ export default function AccountPage() {
         <div className="col-wrapper">
           <RevealWrapper delay={0}>
             <div className="bg-gray-100 p-10 rounded-lg">
-              <h2>Wishlist</h2>
-              {wishListLoaded && (
-              <div className="grid gap-10">
-                {wishedProducts.length > 0 &&
-                  wishedProducts.map((wp) => (
-                    <ProductBox
-                      onRemoveFromWishlist={productRemovedFromWishlist}
-                      product={wp}
-                      key={wp._id}
-                      wished={true}
-                      {...wp}
-                    />
-                  ))}
-                  {wishedProducts.length === 0 && (
-                    <>
-                     {session && (
-                      <p className="py-4">Your wishlist is empty</p>
-                     )} 
-                     {!session && (
-                      <p className="py-4">Login to add product to your wishlist </p>
-                     )}
-                    </>
+              <Tabs
+                tabs={["Orders", "Wishlist"]}
+                active={activeTab}
+                onChange={setActiveTab}
+              />
+              {activeTab === "Orders" && (
+                <>
+                  {!ordersLoaded && <Spinner fullWidth={true} />}
+                  {ordersLoaded && (
+                    <div>
+                      {orders.length > 0 &&
+                        orders.map((order, index) => (
+                          <SingleOrder {...order} index={index} key={index} />
+                        ))}
+                    </div>
                   )}
-              </div>
+                </>
+              )}
+              {activeTab === "Wishlist" && (
+                <>
+                  {wishListLoaded && (
+                    <div className="grid gap-10">
+                      {wishedProducts.length > 0 &&
+                        wishedProducts.map((wp) => (
+                          <ProductBox
+                            onRemoveFromWishlist={productRemovedFromWishlist}
+                            product={wp}
+                            key={wp._id}
+                            wished={true}
+                            {...wp}
+                          />
+                        ))}
+                      {wishedProducts.length === 0 && (
+                        <>
+                          {session && (
+                            <p className="py-4">Your wishlist is empty</p>
+                          )}
+                          {!session && (
+                            <p className="py-4">
+                              Login to add product to your wishlist{" "}
+                            </p>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </RevealWrapper>
           <RevealWrapper delay={100}>
             <div className="bg-gray-100 p-10 rounded-lg flex flex-col gap-2 ml-[5%]">
-              <h2 className="pb-2">{session ? 'Account details' : 'Login'}</h2>
+              <h2 className="pb-2">{session ? "Account details" : "Login"}</h2>
               {addressLoaded && session && (
                 <>
                   <Input
