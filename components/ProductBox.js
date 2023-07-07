@@ -52,7 +52,7 @@ export default function ProductBox({
             </button>
 
             <Image
-              width={400}
+              width={250}
               height={250}
               src={product.images[0]}
               alt={product.title}

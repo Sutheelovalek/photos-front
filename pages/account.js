@@ -88,6 +88,9 @@ export default function AccountPage() {
                   {!ordersLoaded && <Spinner fullWidth={true} />}
                   {ordersLoaded && (
                     <div>
+                      {orders.length === 0 && (
+                        <p className="text-xl pt-3 text-gray-400">Login to see your orders</p>
+                      )}
                       {orders.length > 0 &&
                         orders.map((order, index) => (
                           <SingleOrder {...order} index={index} key={index} />
@@ -113,7 +116,7 @@ export default function AccountPage() {
                       {wishedProducts.length === 0 && (
                         <>
                           {session && (
-                            <p className="py-4">Your wishlist is empty</p>
+                            <p className="py-4 text-gray-400 text-xl">Your wishlist is empty</p>
                           )}
                           {!session && (
                             <p className="py-4">

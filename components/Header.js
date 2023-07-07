@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";
 import { CartContext } from "./CartContext";
+import SearchIcon from "./icons/SearchIcon";
 
 export default function Header() {
     const {cartProducts} = useContext(CartContext)
@@ -26,6 +27,11 @@ export default function Header() {
                 <Link href={'/account'}>Account</Link>
                 <Link href={'/cart'}>Cart ({cartProducts.length})</Link>
             </nav>
+            <Link 
+                className="pt-1"
+                href='/search'>
+                <SearchIcon  />
+            </Link>
         </header>
     )
 }

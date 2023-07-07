@@ -15,8 +15,8 @@ export default function SingleOrder({ line_items, createdAt, ...rest }) {
         </time>
       </div>
       <div className="">
-        {line_items.map((item) => (
-          <div key={item._id}>
+        {line_items.map((item, index) => (
+          <div key={index}>
             <span className="text-gray-400">{item.quantity} x </span>
             {item.price_data.product_data.name}
           </div>

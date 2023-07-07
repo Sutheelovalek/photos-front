@@ -65,7 +65,8 @@ try {
         customer_email: email,
         success_url: process.env.PUBLIC_URL + '/cart?success=1',
         cancel_url: process.env.PUBLIC_URL + '/cart?canceled=1',
-        metadata: { orderId: orderDoc._id.toString(),test:'ok'},
+        metadata: { orderId: orderDoc._id.toString()},
+        allow_promotion_codes: true,
       });
       res.json({
         url: stripeSession.url,
