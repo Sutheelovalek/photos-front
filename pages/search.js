@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useEffect, useState } from "react";
 import Header from "@/components/Header";
 import NewProducts from "@/components/NewProducts";
@@ -10,10 +11,6 @@ export default function SearchPage({ wishedProducts }) {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const debouncedSearch = useCallback(debounce(searchProducts, 500), []);
-  const [word, setWord] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState([]);
-  const [filteredItems, setFilteredItems] = useState([]);
-  const [selectedSuggestions, setSelectedSuggestions] = useState(""); // Add this line
 
   useEffect(() => {
     if (phrase.length > 0) {
@@ -33,11 +30,6 @@ export default function SearchPage({ wishedProducts }) {
       });
   }
 
-  // Define the selectedSuggestions function
-  function handleSelectedSuggestions(title) {
-    setSelectedSuggestions(title);
-  }
-
   return (
     <>
       <Header />
@@ -53,7 +45,7 @@ export default function SearchPage({ wishedProducts }) {
           {products
             .filter((item) => {
               const searchTerm = phrase.toLowerCase();
-              const fullName = `${item.title.toLowerCase()}}`;
+              const fullName = item.title.toLowerCase()
               return (
                 searchTerm &&
                 fullName.startsWith(searchTerm) &&
@@ -65,7 +57,7 @@ export default function SearchPage({ wishedProducts }) {
               <h1
                 className="cursor-pointer w-[330px]"
                 key={item._id}
-                onClick={() => handleSelectedSuggestions(item.title)} // Update this line
+                onClick={() => setPhrase(item.title)}
               >
                 {item.title}
               </h1>
@@ -76,10 +68,7 @@ export default function SearchPage({ wishedProducts }) {
         )}
         {isLoading && <Spinner fullwidth={true} />}
         {!isLoading && products.length > 0 && (
-          <NewProducts
-            products={products}
-            wishedProducts={wishedProducts}
-          />
+          <NewProducts products={products} wishedProducts={wishedProducts} />
         )}
       </div>
     </>
