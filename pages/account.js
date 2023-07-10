@@ -85,7 +85,7 @@ export default function AccountPage() {
               />
               {activeTab === "Orders" && (
                 <>
-                  {!ordersLoaded && <Spinner fullWidth={true} />}
+                  {!ordersLoaded && <Spinner fullwidth={true} />}
                   {ordersLoaded && (
                     <div>
                       {orders.length === 0 && (
